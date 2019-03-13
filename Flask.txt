@@ -1,0 +1,210 @@
+flask-知识点架构
+	1.配置文件
+	2.before_request/after_request
+	3.路由系统
+	4.视图
+	5.模板
+	6.session
+	7.flash
+	8.蓝图(blueprint)
+	flask-组件
+		1.flask-session
+		2.DBUtils
+		3.wtforms
+		4.flask-redis、
+		5.flask-sqlalchemy、
+		6.flask-script、
+		7.flask-migrate、
+		8.gevent-websocket
+1.Flask框架的优势？
+	Flask是轻量级的框架,自由,灵活,可扩展性很强,核心基于Werkzeug WSGI工具和jinja2模板引擎
+	比如:使用Flask写个helloword比django要简单的多
+2.Flask框架依赖组件？
+	Flask有两个主要依赖：
+		1.路由,调试,Web服务网管接口由Werkzeug提供
+		2.模板系统由Jinja2提供
+
+3.Flask蓝图的作用？
+	1.划分目录结构,优化项目结构
+	2.URL划分,反向生成URL(反向解析)
+	3.增强可读性,易于维护
+
+4.列举使用过的Flask第三方组件？
+	1.flask-session
+		将flask中的session由加密存到cookie中的方式更换为放置到其他的数据源
+	2.DBUtils
+		创建数据库连接池
+	3.wtforms
+		对用户请求数据做表单验证
+	4.flask-sqlalchemy:基于Python实现的ORM框架,建立DB-API(Python的数据库接口规范)之上数
+	5.flask-script:支持命令行操作
+	6.flask-migrate：依赖flask-script,进行数据库迁移
+	7.gevent-websocket：实现websocket服务
+	8.flask-redis
+
+5.简述Flask上下文管理流程?
+	RequestContext：封装请求上下文的对象
+	AppContext：封装应用上下文的对象
+	LocalStack : 将local对象中的数据维护成一个栈。通过此类实例来操作Local对象,提供了pop、top、push方法
+	Local：为每一个线程开辟一块独立的空间,用来存放数据
+	LocalProxy：通过此类中的方法来取出request属性和session属性
+	1.请求进来时：
+		1.请求上下文：实例化一个RequestContext对象,并将请求的所有相关信息request和session封装到RequestContext对象中
+			应用上下文：实例化一个AppContext对象,将current_app, g封装到AppContext中
+		2.通过LocalStack类将RequestContext对象,AppContext对象添加到Local中（调用push方法）
+		  Local类为每一个线程开辟一块独立的空间,创建了一个字典来保存数据,这个字典的key是用线程的唯一标识存放自己的数据
+	2.视图中:
+		在视图函数中调用request时会执行LocalProxy中对应的魔法方法__getattr__或__setitem__
+		又通过偏函数调用Localstark中top方法去Local获取到数据,取的是列表的最后一个值。
+	3.请求结束时：请求终止时还是通过LocalStack的pop方法
+		请求终止时还是通过LocalStack的pop方法 将Local中将值在列表中pop掉
+
+	Flask中的session是什么时候创建，什么时候销毁的？
+		当请求进来时，会将session封装为一个RequestContext对象,调用session里面open_session方法,
+		通过这个方法帮助我们获取用户原有的session信息,有就获取,没有就返回一个空的类似字典的数据结构，
+		赋值给对象中的session,当使用的时候触发LocalProxy对像里对魔法方法通过偏函数用Localstark中方法去Local获取到数据
+		使用完后,调用session对像的save_session方法,将数据加密写到用户的cookie中,这个操作在after_request之后
+	flask中一共有几个LocalStack和Local对象:
+		两个LocalStack，两个Local
+	　　request、session共同用一个LocalStack和Local
+	　　g、app共同用一个Localstack和Local
+	为什么把请求放到RequestContext中：
+		因为request和session都是在视图中操作频繁的数据，也是用户请求需要用的数据，
+		将request和session封装在RequestContext中top,pop一次就可以完成，而单独不封装在一起就会多次操作，
+	怎么获取Session/g/current_app/request？
+		通过偏函数（lookup_req_object）、Localstack、Local取值
+	为什么维护成一个栈？
+		1.当是web应用时:不管是单线程还是多线程,栈中只有一个数据
+		2.离线脚本:可以在栈中放入多个数据
+6.Flask中的g的作用？
+	一次请求中的全局对象,在请求结束时清除
+7.Flask中上下文管理主要涉及到了那些相关的类？并描述类主要作用？
+	RequestContext：封装请求上下文的对象
+	AppContext：封装应用上下文的对象
+	LocalStack : 将local对象中的数据维护成一个栈。通过此类实例来操作Local对象,提供了pop、top、push方法
+	Local：为每一个线程开辟一块独立的空间,用来存放数据
+	LocalProxy：通过此类中的方法来取出request属性和session属性
+
+8.为什么要Flask把Local对象中的的值stack 维护成一个列表？
+	多app离线脚本嵌套时一个域内使用的对象都是本app的
+9.Flask中多app应用是怎么完成？
+	请求进来时,可以根据URL的不同,交给不同的APP处理。一般用蓝图也可以实现。一般不写多app应用。
+10.在Flask中实现WebSocket需要什么组件？
+	使用gevent-websocket
+	1.前端页面：
+		1.建立websocket连接
+			var ws= new WebSocket("ws://127.0.0.1:5000/upload");
+		2.向服务器发送内容: ws.send()
+			ws.onpen=function(){
+				ws.send(JSON.stringfy({"name":"jerd}))   
+			}
+		3.接收服务端的内容:ws.onmessage
+			ws.onmessage = function(ev){
+				var ticket = JSON.parse(ev.data);
+			}
+	2.服务器端
+		1.导入：
+			from geventwebsocket.handler import WebSocketHandler
+			from gevent.pywsgi import WSGIServer
+		2.在启动时
+		if __name__ == "__main__":
+			http_server=WSGIServer(("0.0.0.0",5000),app,handler_class=WebSocketHandler)
+			http_server.serve_forever()
+		3.视图:
+			1.获得websocket请求
+				ws=request.environ.get("wsgi.websocket")
+			2.判断是否是websocket协议
+			 if not ws:
+				"请使用websocket协议"
+			3.接收消息和向客户端发送内容
+			while True:
+				content=ws.receive()
+				data={"name":"jerd","age":18}
+				ws.send(json.dumps(data))
+11.wtforms组件的作用？
+	对用户请求数据进行验证。
+12.Flask框架默认session处理机制？
+	Flask的默认session利用了Werkzeug的SecureCookie,把信息做序列化后编码(base64),放到cookie里了。
+	过期时间是通过cookie的过期时间实现的
+
+13.解释Flask框架中的Local对象和threading.local对象的区别？
+	threading.local的作用：
+		多线程操作时,为每个线程创建一个值。使得线程之间个字操作自己的值，互相不影响。
+	Local：Local更强大,能够根据协程隔离对象
+14.Flask中 blinker 是什么？
+	Blinker 是一个基于Python的强大的信号库，它既支持简单的对象到对象通信，也支持针对多个对象进行组播。
+	Flask的信号机制就是基于它建立的
+15.SQLAlchemy中的 session和scoped_session 的区别？
+	session : 简单的创建连接。再创建一个Session对象的时候,新的对象和原来的对象是不同
+			>>> session1 = Session()
+			>>> session2 = Session()
+			>>> session1 is session2
+			False
+	scoped_session：类似单例模式,当调用使用的时候,会先在Registry里找找之前是否已经创建session了。
+				要是有,就把这个session返回,没有,就创建新的session。保证了同一个线程中
+				返回的是同一个对象
+
+要是没有，就创建新的session
+False为每一个线程创建连接
+16.SQLAlchemy如何执行原生SQL？
+	from sqlalchemy import create_engine
+	engine = create_engine("xxx")
+	1.  conn = engine.raw_connection()
+		cursor = conn.cursor()
+		cursor.execute("select * from Course")
+	2.conn = engine.contextual_connect()
+		with conn:
+			cur = conn.execute(
+				"select * from Course"
+			)
+	3.cur = engine.execute("select * from Course")
+
+17.ORM的实现原理？
+	ORM将底层的数据库操作指令抽象成高层的面向对象操作
+	ORM提供了对数据库的映射,不用直接编写SQL代码，只需像操作对象一样从数据库操作数据
+	Python中最广泛使用的ORM框架是SQLAlchemy,它是一个很强大的关系型数据库框架,
+	不仅支持高层的ORM,也支持使用低层的SQL操作,
+18.DBUtils模块的作用？
+	DBUtils是数据库连接池实现模块,用于对数据库连接线程化,安全和有效的访问数据库
+19.以下SQLAlchemy的字段是否正确？如果不正确请更正：
+
+
+20.SQLAchemy中如何为表设置引擎和字符编码？
+	在类下定义__table_args__
+	ENGINE = create_engine("xxx",)
+	Base = declarative_base()
+	class UserInfo(Base):
+		__tablename__ = "user_info"
+
+		id = Column(Integer, primary_key=True)
+		name = Column(String(32), index=True, nullable=False)
+
+		__table_args__ = (
+			UniqueConstraint("id", "name", name="uni_id_name"),联合唯一
+			Index('ix_id_name', 'name', 'extra'),联合索引
+			'mysql_engine': 'InnoDB',  引擎
+			'mysql_charset': 'utf8' 字符编码
+		)
+
+21.SQLAchemy中如何设置联合唯一索引？
+	如20题
+补充：
+	1.Flask脚本的常用方式是什么?
+		1.在shell中运行脚本文件
+		2.在python编译器中run
+	2.如何在Flask中访问会话
+		会话:
+			客户端打开与服务器的连接发出请求到服务器响应客户端请求的全过程称之为会话 
+		Flask默认采用将加密后的session放到cookie中来操作用户会话
+		会话跟踪：
+			对同一个用户对服务器的连续的请求和接受响应的监视。
+		会话跟踪常用的方法：
+			1.URL重写：在URL结尾添加一个附加数据以标识该会话
+			2.隐藏表单域：将会话ID添加到HTML表单元素中提交到服务器
+			3.Cookie 
+			4.session
+	3.Flask是一个MVC模型吗?是
+	4.解释 Flask中的数据库连接?
+		1.用第三方库正常连接,如pymsql库。用sql语句正常操作数据库
+		2.用ORM来进行数据库连接,flask中典型的flask_sqlalchemy
+		

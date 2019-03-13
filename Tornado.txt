@@ -1,0 +1,115 @@
+Tornado知识点：
+	配置文件
+	路由系统
+	视图函数
+	模板
+		1.基本使用
+		2.继承extends 和导入include
+		3.静态文件的缓存
+		4.模板中自定义方法 UIMethod
+		5.模板中自定义模块UIModule  （内容+css+js） ---> 自定义组件
+	cookie
+		- cookie
+		- 签名cookie（看源码）
+	prepare(self):定义请求之前的操作,在get/post之前执行,默认pass 类似中间件
+####################################Tornado######################################
+1.简述Tornado框架的特点。
+	1.异步非阻塞
+	2.原生支持websocket；
+	tornado框架的异步非阻塞是指：
+		单进程单线程情况下帮助开发者完成并发操作
+		客户端发来请求,如果tornado需要向第三发发送IO请求,使用异步非阻塞,在IO等待期间处理其他请求。
+		实现方式：IO操作一般都要yield
+			1.加装饰器gen.coroutine
+			2.yield future
+		
+2.简述Tornado框架中Future对象的作用？
+	用于向第三方发送请求时,保存结果和状态的容器
+	  future = Future()   _done=False
+    客户端向服务端发送请求,服务端创建一个客户端的socket,如果需要向百度等第三方发送请求,则又增加一个socket
+    第三方请求返回结果后,将Future对象中的_done改为True,并将结果放到
+    set_result中,tornado就立即返回
+
+3.Tornado框架中如何编写WebSocket程序？
+	Tornado原生支持websocket,新建类继承WebSocketHandler
+	在类中定义open on_message on_close方法
+
+4.Tornado中静态文件是如何处理的？
+	如： <link href="{{static_url("commons.css")}}" rel="stylesheet" />
+	在配置文件中写上静态文件的路径
+	settings = {
+            'template_path':'templates',
+            'static_path':'static',
+            'static_url_prefix':'/static/'
+			}
+
+5.Tornado操作MySQL使用的模块？
+	使用tornado_mysql
+	比如连接需要20s,这个时候可以去做其他的事
+    之前做的操作,连接mysql(pymql)和redis,当操作非常耗时时,服务是夯住的
+6.Tornado操作redis使用的模块？
+	tornado_redis
+7.简述Tornado框架的适用场景？
+	用户请求到达tornado,如果tornado需要向第三方发送IO请求,此时适用。
+#############################Tornado补充############################
+	1.tornado实现异步非阻塞得益于他和其他框架哪里的不同？
+	 得益于socket
+                - flask、django：wsgi（uwsgi、wsgiref、werkzurg）
+                - tornado: 自己写IO多路复用+socket实现。
+				IO多路复用：检测多socket的变化(是否有人连接,是否有内容发来)
+#############################RabbitMQ和celery############################							
+1.简述 RabbitMQ、Kafka、ZeroMQ的区别？
+
+2.RabbitMQ如何在消费者获取任务后未处理完前就挂掉时，保证数据不丢失？
+		将no-ack属性设置为Flase
+		ack是标记 消费者拿走数据后,返回一个标记,得到这个标记后就删掉
+        否则取走数据后直接删掉,数据就再也回不来了
+3.RabbitMQ如何对消息做持久化
+	将durable属性设置为True 
+4.RabbitMQ如何控制消息被消费的顺序？
+	默认消息队列里的数据是按照顺序被消费者拿,即A拿完B拿,B的数据处理结束,A的数据未结束,B等着A结束取完数据后
+    B再拿
+    调用channel对象中的basic_qos方法
+		channel = connection.channel()
+		channel.basic_qos(prefetch_count=1)		
+	表示谁来谁取(谁有空谁处理)不再按照奇偶数排列
+
+5.以下RabbitMQ的exchange type分别代表什么意思？如：fanout、direct、topic。
+		exchange type = direct,关键字发送:发送消息时明确指定某个队列并向其中发送消息
+		exchange type = topic 模糊匹配
+		exchange type = fanout  发布者发布消息时,每一个订阅者创建一个队列,将消息发送给所有的订阅者
+		
+7.简述 celery 是什么以及应用场景？
+	Celery是由Python开发的处理大量任务的分发系统,依赖于消息队列
+	使用它实现异步任务(等待就去执行其他任务)和定时任务
+8.简述celery运行机制。
+	Celery的架构由三部分组成,消息中间件（message broker）任务执行单元（worker）和任务执行结果存储组成
+	1.每当应用程序调用celery的异步任务的时候,会向broker传递消息
+	2.而后celery的worker将会取到消息,进行程序执行
+	3.worker将执行结果放到result store,客户端可以携带ID 去询问是否已经完成
+9.celery如何实现定时任务？
+	设置celery对象的BEAT_SCHEDULE属性,定义执行的任务和时间
+	启动一个定时任务: celery -A tasks(任务名) beat
+10.简述 celery多任务结构目录？
+  
+
+11.celery中装饰器 @app.task 和 @shared_task的区别？
+	app.task : 为某一个app创建可执行任务
+	shared_task : 为该文件下的所有的app创建可执行任务
+######################补充#######################
+1.程序之间如何实现通信？
+	1.restful api(json)
+	2.rpc,基于消息队列使得应用程序之间进行相互调用。
+	3.webservice(xml)
+2.为什么要有消息队列？
+	1.解决供求关系，生产者消费者模型
+	2.基于rpc,实现程序之间通信
+	消息队列的种类：
+		1.Queue，Python内存中的队列。
+		2.redis list，可以做队列。
+		3.rabbitmq,专门用于做消息队列。
+3.在python中如何使用rabbitmq
+	import pika
+4.rpc通信流程：
+	客户端往队列1送完数据后,建个新的队列2,服务端在队列1接收数据后,
+	将处理后将结果放到队列2返回,客户端在队列2处接收

@@ -1,0 +1,652 @@
+1.Python和Java、PHP、C、C#、C++等其他语言的对比？
+	python是一种解释性语言,其代码更加优美,简洁。开发效率高,可移植性比较好
+
+2.简述解释型和编译型编程语言？
+	解释性：代码边执行边编译。php python 优点：开发效率高,跨平台。缺点：执行效率低
+	编译型：代码执行前,一次性将代码编译成二进制文件。c c++ 优点：执行效率高 缺点：开发速度慢
+3.Python解释器种类以及特点？
+		1.Cpython:这个解释器是用C语言开发的,会将源文件（py文件）转换成字节码文件（pyc文件)
+				  在命令行下运行python就是启动CPython解释器。
+		2.IPython:IPython是基于CPython之上的一个交互式解释器，也就是说，IPython只是在交互方式上有所增强，但是执行Python代码的功能和CPython是完全一样的。
+		3.PyPy:，对Python代码进行动态编译,将Python的字节码编译成机器码,可以显著提高Python代码的执行速度。
+		4.Jython:Jython是运行在Java平台上的Python解释器，可以直接把Python代码编译成Java字节码执行
+4.位和字节的关系？
+	1bytes=8bit
+5.b、B、KB、MB、GB 的关系？
+	1B=8b
+	1KB=1024B
+	1MB=1024KB
+	1GB=1024MB
+6.请至少列举5个 PEP8 规范（越多越好）。
+	1.四个空格的缩进,不使用tap
+	2.注释用英文字母,首字母大写
+	3.每行的最大长度为79,换行可以使用反斜杠,最好使用圆括号
+	4.常量命名全部使用大写的方式,可以使用下划线
+	5.变量的命名全部使用小写的方式,可以使用下划线
+	6.类的属性命名全部使用小写的方式,可以使用下划线
+	7.类上面空两行,类中的方法之间空一行
+	8.避免不必要的空格。逗号,冒号,分号前不要加空格
+	9.不要一句import多个库
+	10.异常中不要使用裸露的except,except后跟具体的exceptions
+
+7.通过代码实现如下转换：
+	二进制转换成十进制：v = “0b1111011” int(v,2)
+	十进制转换成二进制：v = 18     bin(v)
+	八进制转换成十进制：v = “011”  int(v,8)
+	十进制转换成八进制：v = 30	   oct(v)
+	十六进制转换成十进制：v = “0x12” int(v,16)
+	十进制转换成十六进制：v = 87     hex(v)
+
+8.请编写一个函数实现将IP地址转换成一个整数。
+	10.3.9.12 转换规则为：
+	ip="10.0.3.193"
+	def ip_int(ip):
+		ip_num=0
+		ip_list=ip.split(".")
+		for i in enumerate(reversed(ip_list)):
+			num=256**i[0]
+			ip_num += int(i[1]) * num
+		return ip_num
+	print(ip_int(ip))
+9.python递归的最大层数？
+	官网上显示的是1000,真正运行到997,998就停止了
+	修改最大递归数
+	import sys
+	sys.setreursionlimit()
+
+10.求结果：
+	v1 = 1 or 3             
+	v2 = 1 and 3		 
+	v3 = 0 and 2 and 1
+	v4 = 0 and 2 or 1
+	v5 = 0 and 2 or 1 or 4
+	v6 = 0 or False and 1
+	1 3  0 1 1 False
+11.ascii、unicode、utf-8、gbk 区别？
+	ascii:早起编码,只支持英文字母和一些符号。每个字符用一个字节表示
+	unicode:万国码 开始用2个字节表示一个字符,后来4个字节表示一个字符,资源浪费
+	utf-8 每个英文字符用1个字节表示 欧洲地区2个字节表示一个字符 亚洲地区3个字节表示一个字符
+	gbk:中文编码,国标,2个字节表示一个字符
+12.字节码和机器码的区别？
+	机器码:是电脑cpu可直接解读的数据
+	字节码：是一种中间状态的二进制代码,需要转译后才能成为机器码
+13.三元运算规则以及应用场景？
+	 x if x>y else y
+	用于简单的if-else判断,比如用在lambda表达式中
+14.列举 Python2和Python3的区别？
+	1.py2编码方式是ascii py3的编码方式是utf-8
+	2.print语句没有了,py3使用print()函数
+	3.raw_input函数被Python3废弃，统一使用input函数
+	4.py3中只有range,实现和py2的xrange相同
+	5.捕获异常有except exc,var 改为except exc as var
+	6./除法运算,py2值为正数,py3中为浮点数
+	7.long整数类型被py3废弃，统一使用int
+	8.file函数被Py3废弃，统一使用open来处理文件
+	9.Py2中存在经典类和新式类的区别,Python3统一采用新式类
+	10.Py3采用的是绝对路径的方式进行import
+
+
+#####python2和python3的编码问题########
+    为什么Python2默认是ascii Python3默认是Unicode？
+    Python有两种不同的字符串，一种存储文本，一种存储字节。对于文本，Python内部采用Unicode存储，而字节字符串显示原始字节序列或者ASCII
+    编码（encode）：将Unicode字符按照编码规则（如UTF-8）编成字节序列
+    解码（decode）：将字节序列按照编码规则（如UTF-8）解释成unicode形式
+    在Python3当中，文本字符串类型（使用Unicode数据存储）被命名为 str , 字节字符串类型被命名为 bytes
+    一般情况下，实例化一个字符串会得到一个 str 对象，想得到bytes，那就在文本之前加上前缀 b , 或者 encode。Python3默认是Unicode，就是这个意思
+    在Python2中，bytes 对象叫做str 文本字符串类型叫做unicode 如果想得到一个文本字符串，你需要在字符串之前加上前缀 u 或者 decode
+    Python2中的 str （字节） 对象，有一个 encode 方法，它就是用来报错的
+        unicode （文本字符） 对象也有一个用来报错的 decode 方法
+
+15.用一行代码实现数值交换：a = 1 b = 2
+	a,b=b,a
+16.Python3和Python2中 int 和 long的区别？
+	py2中有int和long类型,py3中只有long类型
+17.xrange和range的区别？
+	1.range返回的是一个列表,xrange的用法和range相同,但返回的是生成器
+	2.xrange的性能更高,当列表很大时,xrange能为我们节省内存
+18.文件操作时：xreadlines和readlines的区别？
+	1.readlines读取所有行,返回一个列表
+	2.xreadlines读取所有行,返回一个生成器
+19.列举布尔值为False的常见值？
+ 0以及长度为0的内置对象
+20.字符串、列表、元组、字典每个常用的5个方法？
+	字符串：1.startswith 以**开头
+			2.find 根据元素找索引,默认找到第一个就返回
+			3.replace 替换,默认全部替换
+			4.split 分割
+			5.strip 去空格
+	列表：1.增：append insert extend
+		  2.删：pop remove clear del
+		  3.改：根据索引和切片
+		  4.查：索引和for
+	元组：不可变的数据类型
+	字典：增:setdefault 
+		  删：pop clear  del popitem
+		  改：update
+    集合：无序的 查元素不能用索引,且集合里的元素是不可改的(无修改的操作)
+           1.增：add  update(迭代添加)
+           2.删：pop(随机) remove clear del
+           3.查 for
+
+
+    **元祖为什么是不可变的，python中为什么要有这个数据类型?
+    比如我们在写s的时候：
+        s = [('yellow', 1), ('blue', 2), ('yellow', 3)]
+    而不是s = [['yellow', 1], ['blue', 2], ['yellow', 3]]
+    元祖它能代表一个对象，可以把('yellow', 1)当作平面中某个点，而['yellow', 1]只是长度为2的一个对象
+    **1.dict的fromkeys属性：
+        两个参数，第一个参数的值迭代作为key值，第二个参数作为value值。key值指向同一内存地址
+        dic1=dict.fromkeys("abc",[])
+
+       2.对字典的value设置默认值
+       from collections import defaultdict
+        d = defaultdict(list)
+			
+	
+
+21.lambda表达式格式以及应用场景？
+	lambda x: x**2
+	匿名函数。为了实现某些简单的功能而设计的函数。
+	好处：简单清晰,节省代码。常与内置函数合用,有效的减少了冗余代码
+
+22.pass的作用？
+	空语句,什么也不做,保持代码的完整性
+23.*args和**kwargs作用
+	*args：接收N个位置参数,并将结果转换成元祖
+	**kwargs：接收N个关键字参数,将结果转换成字典
+	*args一定在**kwargs的前面
+24.is和==的区别
+	is比较的是内存地址是否相同.==比较的是两个变量值的大小
+25.简述Python的深浅拷贝以及应用场景？
+	浅拷贝：如果原对象是不可变数据类型,那么拷贝的对象就是对原对象的引用
+			值和id均相同
+			如果原对象是可变数据类型,拷贝对象的值和原对象的值相同但id不同,
+			如果有子对象,则拷贝对象的子对象的值和id和原对象的子对象相同
+	深拷贝:开辟新的内存空间。拷贝对象和子对象和原对象的值均相同,但id均不同,是独立的
+26.Python垃圾回收机制？
+	引用计数,标记清除,分代回收
+	1.每个对象都会记录被引用的次数,每当新的引用指向该对象时,它的引用计数加1.
+	  每当该对象的引用失效时计数减1,一旦对象的引用计数为0，该对象立即被回收
+	  关键点：1.引用和对象时分离的
+			  2.python维护一个对象的时候会维护一个引用计数
+			  3.赋值,函数调用可变对象的一个值,引用计数增加
+			  4.引用被销毁,离开作用域,其他引用被销毁 引用计数减少
+	
+	2.对象的循环引用问题，Python引入了标记-清除和分代回收两种GC机制
+		对活动对象打上标记,没有标记的对象『非活动对象』进行回收
+		关键点：1.解决引用计数的循环引用的问题
+				2.维护双向链表
+				3.全局变量 标记成根节点
+				4.对象分为可达对象,不可达对象 不可达对象要被回收
+	3.分代回收:Python将内存根据对象的存活时间划分为不同的集合，每个集合称为一个代
+		Python将内存分为了3“代”，分别为年轻代、中年代、老年代，他们对应的是3个链表
+		年轻代链表的总数达到上限时，Python垃圾收集机制就会被触发,把那些可以被回收的对象回收掉，
+		而那些不会回收的对象就会被移到中年代去
+		关键点：1.解决标记清除的效率问题 
+				2.分三代
+	python是如何进行内存管理的？
+	从三个方面来说,一对象的引用计数机制,二垃圾回收机制,三内存池机制
+	1.  引用计数：python程序中使用的每个变量后台都有一个引用计数。赋值或调用操作，计数加一；相反，删除或移出窗口对象，计数减一。
+	2.  垃圾收集：将引用计数为0的对象所占有的内存空间释放。还有一个循环垃圾收集器，负责清理未引用的循环
+	3.  内存池：内存池是预先从内存中申请的内存块，当创建小于256 bits 的对象时，从内存池申请内存空间。创建大于256 bits 的对象从内存申请空间。
+	释放内存时，来自内存池的内存空间返回给内存池。这样做的目的是为了减少内存碎片，提升效率。
+27.Python的可变类型和不可变类型？
+	不可变类型：int str  bool tuple
+	可变类型：list dict set
+28.求结果
+	v=dict.fromkeys(['k1','k2'],[])
+	v['k1'].append(666)
+	print(v)
+	v['k1']=777
+	print(v)
+	结果：{'k1': [666], 'k2': [666]}
+		  {'k1': 777, 'k2': [666]}
+29.求结果
+	def num():
+		return [lambda x :i*x for i in range(4)]
+	print([m(2) for m in num()])
+	结果：[6, 6, 6, 6]
+30.列举常见的内置函数？
+	1.locals() 将局部的变量存储起来
+	2.max 求最大值 min求最小值
+	    max(dic,key=func) 对于dic返回值是key
+	    dic={3:20,2:30,5:10}
+        print(max(dic,key=lambda x:dic[x])) #2
+        print(max(dic.items(), key=lambda x: x[1]))  #(2,30)
+        元祖：
+            s = [('yellow', 1), ('blue', 2), ('yellow', 3)]
+            print(max(dic,key=lambda x:x[1]))  #('yellow', 3)
+	3.all,any
+		all：元素都为真时为值,如果可迭代对象的值为空,返回True
+		any：有一个元素为真就是真,如果可迭代对象的值为空,返回False
+	4.enumerate() 枚举,返回索引与值的元祖
+	5.zip拉链方法 接收多个可迭代对象,将对象相同索引的值放到一个元祖中。
+				  返回值是个迭代器
+				  list(zip(li,li1))
+	6.filter 过滤出符合条件的元素。接收一个函数和可迭代对象。函数对每个元素进行判断
+			 将返回为True的元素加到迭代器中
+			 filter(function or None, iterable)
+	7.map 接收一个函数和可迭代对象,函数对每个元素处理后,将返回值加到迭代器中
+	      map(func, *iterables))
+	8.reduce 接收一个函数和可迭代对象。函数必须接收两个参数,对每个元素反复调用函数
+	9.sorted 排序 返回一个新的列表  sorted(li1,key=func)
+	10.sort  是对原列表进行排序 li1.sort(key=func)
+	11.reversed 反转 形成一个新的迭代器
+	max min map filter zip 返回的是迭代器 sorted 返回的是列表
+
+31.filter、map、reduce的作用？
+		filter 过滤出符合条件的元素。接收一个函数和可迭代对象。函数对每个元素进行判断
+				 将返回为True的元素加到迭代器中
+		map 接收一个函数和可迭代对象,函数对每个元素处理后,将返回值加到迭代器中
+		reduce 接收一个函数和可迭代对象。函数必须接收两个参数,对每个元素反复调用函数
+
+32.一行代码实现9*9乘法表
+	for i in range(1,10):
+		for j in range(1,i+1):
+			print('%s*%s=%s'%(j,i,i*j),end=',')
+		print('')
+
+33.如何安装第三方模块？以及用过哪些第三方模块？
+	使用pip
+	requests：进行网络请求
+	bs4：接收一个HTML或XML字符串,然后将其进行格式化
+	pillow:对图像处理,验证码
+
+34.至少列举8个常用模块都有那些？
+	1.re模块:作正则匹配
+			方法：findall search match split sub
+	2.random 模块
+			random uniform  randint randrange choice sample  shuffle
+	3.time模块
+	4.sys模块 负责程序与python解释器的交互，提供了一系列的函数和变量
+	5.os模块 负责与操作系统交互 提供了访问操作系统底层的接口
+	6.collections : 更多数据类型
+	7.json序列化模块
+	8.loggin 日志模块
+35.re的match和search区别？
+	相同点：1.都接收两个参数，第一个参数为正则表达式，第二个参数为待匹配的字符串
+			2.只匹配一个符合条件的项
+	不同点：search根据所写的正则表达式匹配出第一个满足条件的项
+			match 根据所写的正则表达式从头开始匹配，相当于在正则表达式开始的位置加一个^
+36.什么是正则的贪婪匹配？
+	贪婪匹配:总是尝试匹配尽可能多的字符,*,+,?等都是贪婪匹配
+			 后面加?号使其变成惰性匹配
+37.a. [ i % 2 for i in range(10) ] b. ( i % 2 for i in range(10) )
+	a=[0, 1, 0, 1, 0, 1, 0, 1, 0, 1]
+	b返回的是生成器
+38.def func(a,b=[]) 这种写法有什么坑？
+	函数定义的时候默认生成列表,而不是每次调用时生成一个列表
+39.如何实现 “1,2,3” 变成 [‘1’,’2’,’3’] ?
+	s="1,2,3"
+	print(s.split(","))
+40.如何实现[‘1’,’2’,’3’]变成[1,2,3] ?
+	print(list(map(lambda x:int(x),s)))
+41.比较： a = [1,2,3] 和 b = [(1),(2),(3) ] 以及 c = [(1,),(2,),(3,) ] 的区别？
+	a,b中的元素都是int c中的元素是元祖	
+42.如何用一行代码生成[1,4,9,16,25,36,49,64,81,100] ?
+	[i*i for i in range(1,11)]
+43.一行代码实现删除列表中重复的值 ?
+	使用set
+
+44。如何在函数中设置一个全局变量 ?
+	使用global关键字：
+			1 可以声明一个全局变量
+			2 局部作用域想要对全局作用域的变量修改，需要用到global 仅限（int和str）
+45.logging模块的作用？以及应用场景？
+	记录日志
+	1.给用户看 2.给测试人员和运维人员看 3.记录
+
+46.请用代码简答实现stack 。
+	栈:后进先出
+    class Stack(object):
+        def __init__(self):
+            self.data=[]
+        def push(self,item):
+            self.data.append(item)
+        def pop(self):
+            return self.data.pop()
+	队列:先进先出
+		class Queue(object):
+			def __init__(self):
+				self.data=[]
+			def push(self,item):
+				self.data.insert(0,item)
+			def pop(self):
+				return self.data.pop()
+
+47.常用字符串格式化哪几种？
+占位符%和format
+
+48.简述 生成器、迭代器、可迭代对象 以及应用场景？
+	可迭代对象：
+    1.实现了__iter__方法的对象都是可迭代对象。对可迭代对象调用__iter__方法会返回一个迭代器。
+    2.定义可迭代对象，必须实现__iter__方法；
+	迭代器:
+		1.实现了__next__()(python2中实现 next())方法的对象都是迭代器
+		2.迭代器有两个基本的方法：
+			__iter__方法：返回迭代器对象本身
+			next方法：返回迭代器的下一个元素
+		3.定义迭代器，必须实现__iter__和next方法。
+			迭代器要么返回迭代中的下一项，要么就引起一个StopIteration异常:以终止迭代
+	生成器:
+		1.生成器本质就是迭代器,具有yield关键字的函数都是生成器
+		2.生成器自动实现了"迭代器协议"（即__iter__和next方法）不需要再手动实现两方法。
+		3.生成器在迭代的过程中可以改变当前迭代值(send)，而修改普通迭代器的当前迭代值往往会发生异常，影响程序的执行。
+	处理大量数据时,为了节省内存,使用生成器逐个取值
+	
+	应用场景: 装饰器:flask路由 django csrf  django内置认证  类方法和静态方法
+			  迭代器:for循环 如果数列的数据规模巨大
+			  生成器:在redis中取值hscan_iter("k1",100)  range/xrange django admin源码
+49.用Python实现一个二分查找的函数。
+
+
+50.谈谈你对闭包的理解？
+	闭包:内层函数引用外层函数（非全局）变量时，该内层函数称为闭包函数。常用于装饰器
+	作用：保护内存。开辟的内存空间不会随着函数的结束而关闭
+
+51.os和sys模块的作用？
+	os模块:
+    负责程序与操作系统的交互,提供了访问操作系统底层的接口
+    常用方法:
+        1.os.getcwd() 获取当前工作目录
+        2.os.listdir("dirname") 列出自定目录下的所有文件和子目录
+        3.os.mkdir("dirname") 生成目录
+        4.os.remove(path) 删除一个文件
+        5.os.path.join(name1,name2) 将多个路径组合后返回
+	sys模块:
+		负责程序与python解释器的交互，提供了一系列的函数和变量,
+		用于操控python运行时的环境
+		常用方法:
+			sys.exit(n)        退出程序，正常退出时exit(0),错误退出sys.exit(1)
+			sys.version        获取Python解释程序的版本信息
+			sys.path           返回模块的搜索路径
+			sys.platform       返回操作系统平台名称
+
+52.如何生成一个随机数？
+	random模块
+53.如何使用python删除一个文件？
+	os.remove()
+54.谈谈你对面向对象的理解？
+	面向对象是一种编程思想,以类的眼光来看待事物的一种方式。一切皆对象,每个对象都有自己的属性,自己的行为。
+	在现实生活中的任何物体都可以归为一类事物,而每一个个体都是一类事物的实例
+	面向对象有三大特性:封装、继承和多态。
+	1.封装就是将方法和属性封装到类中,并对数据进行封装,使代码模块化,这样做使得代码的复用性更高。
+	2.继承则是进一步将一类事物共有的属性和行为抽象成一个父类，而每一个子类是一个特殊的父类--有父类的行为和属性,
+	也有自己特有的行为和属性。这样做扩展了已存在的代码块，进一步提高了代码的复用性。
+	3.多态则是为了实现接口重用。多态的一大作用就是为了解耦--为了解除i父子类继承的耦合度。
+	多个有相似特征的数据类型之间，不需要建立继承关系，而是通过约定俗成的方式来规范
+	
+
+55.Python面向对象中的继承有什么特点？
+	1.python中的继承分为单继承和多继承
+	2.父类和子类拥有同名的方法时,子类的对象只会调用子类的
+	如果想要调用父类的方法,使用super
+	3.引用父类中的属性和方法时:
+		1.使用单继承,会先从子类中寻找，子类中不存在，就去父类中找，直到最顶级的父类
+		2.使用多继承会,先从子类中寻找,子类中不存在。会根据继承的顺序去查找
+	4.继承的作用:
+		1.减少代码的重用
+		2.提高代码可读性
+		3.规范编程模式 
+56.面向对象深度优先和广度优先是什么？
+	深度优先 广度优先 都是一种遍历算法,把所有的项都走一遍,且不会重复
+	深度优先,先沿一条线走,当前线走完之后,再走其他的线。
+			主要体现在经典类在多继承的情况下查找属性的方式
+	广度优先,顺着一条线查,还有别的路能走到目标处，就终止这条路,换一条线查。
+			主要体现在新式类在多继承的情况下查找属性的方式
+57.面向对象中super的作用？
+	super在子类派生出新的方法,重用父类的功能
+	按照mro的顺序去查找并调用方法
+58.是否使用过functools中的函数？其作用是什么？
+	装饰器中使用过functools.wraps,使用装饰器后,函数的属性会发生变化,修复函数
+	偏函数functools.partial,自动传参,值为函数,需要加()才执行
+	 functools.partial(func,123)
+
+59.列举面向对象中带双下划线的特殊方法，如：__new__、__init__
+	1.__init__  初始化方法 给已经创建出来的对象添加属性初始化方法
+	2.__new__   构造方法  创造一个对象
+	3.__del__   析构方法: 对象的被删除之前调用的方法
+	4.__call__   对象后面+()直接调用call方法，此方法python独有
+				类后面加()调用执行init方法，对象后面()直接调用call方法
+	5.__str__   如果一个类中定义了__str__方法，那么在打印对象时，默认输出该方法的返回值
+	6.__repr__  如果一个类中定义了__repr__方法，那么在打印对象时，默认输出该方法的返回值
+				__str__是面向用户的，而__repr__面向程序员
+	7.__item__系列 操作a['name']这种形式
+	8.__attr__系列 操作a.name 这种形式
+
+60.如何判断是函数还是方法？
+	1.函数是封装了一些独立的功能,可以直接调用,可以传参,可以有返回值,也可以没返回值
+	2.方法和函数类似,同样封装了独立的功能,但是方法是需要通过对象来调用的  
+	3.判断类型,如果是function就是函数 method就是方法
+
+61.静态方法和类方法区别？
+	1.装饰器不同,类方法@classmethod,静态方法@staticmethod
+	2.类方法中有一个默认的参数cls,而静态方法没有,相当于在类作用域下的普通函数
+	3.调用的时候都不需要实例化
+62.列举面向对象中的特殊成员以及应用场景
+	同59题
+63.1、2、3、4、5 能组成多少个互不相同且无重复的三位数
+	5*4*3
+
+64.什么是反射？以及应用场景？
+	通过字符串来获取对象的属性或方法甚至获取类
+	如：rest framework里面的CBV,根据用户请求方式的不同,
+	   通过反射调用对应的函数,实现不同的操作
+
+65.metaclass作用？以及应用场景？
+	metaclass是生产类的类,通过它来控制类的产生同时建类时能够自动地改变类
+	应用场景：
+	1.在模块里将所有的类的属性都设置成大写形式。
+		有好几种方法可以办到，但其中一种就是通过在模块级别设定__metaclass__。采用这种方法，
+		这个模块中的所有类都会通过这个元类来创建
+	2.元类的主要用途是创建API,比如Django ORM
+		models.Model定义了__metaclass__
+	3.使用抽象类时
+		from abc import ABCMeta,abstractmethod
+		class Payment(metaclass=ABCMeta):   Payment就成了接口类
+			@abstractmethod
+	4.创建单例模式
+	没有指定的话，Python就会使用默认的type作为metaclas创建类
+66.用尽量多的方法实现单例模式。
+	1.	import threading
+		class Singleton(object):
+			instance_lock=threading.Lock()
+			instnce=None
+			def __new__(cls,*args,**kwargs):
+				if not cls.instance:
+					cls.instance=super(Singleton,cls).__new__(cls,*args,**kwargs)
+				return cls.instance
+	2.import threading
+		class Singleton(object):
+			instance_lock=threading.Lock()
+			@classmethod
+			def instance(cls,*args,**kwargs):
+				if not hasattr(Singleton,"instance"):
+					Singleton.instance=Singleton(*args,**kwargs)
+				return Singleton.instance
+	3.from functools import wraps
+		def singleton(cls):
+			instance={}
+			@wraps(cls)
+			def inner(*args,**kwargs):
+				if cls not in instance:
+					instance[cls]=cls(*args,**kwargs)
+				return insyance[cls]
+			return inner
+		@singleton
+		class A():pass
+	4.使用元类
+		import threading
+		class Singleton(type):
+			instance_lock=threading.Lock()
+			_instances = {}
+			def __call__(cls, *args, **kwargs):
+				if cls not in cls._instances:
+					cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
+				return cls._instances[cls]
+		Python2
+		class MyClass(object):
+			__metaclass__ = Singleton
+		Python3
+		class MyClass(metaclass=Singleton):
+		   pass
+	装饰器单例与new单例的区别：
+		 使用装饰器单例,属性不会被覆盖,继续实例化时直接返回之前生成的对象	
+		 new会重新调用init方法,为实例重新初始化属性
+67.装饰器的写法以及应用场景。
+	1.在不改变被装饰的函数以及被装饰函数的执行方式下，在添加额外的功能
+	2.装饰器是在加载函数的时候执行的（@wrapper）
+	3.装饰器的开放封闭原则：对扩张是开放的，对修改是封闭的
+	4.装饰器的好处：1 随时都可以调用；2 在另一个函数前后可以添加新的功能。
+	被装饰后的函数其实已经是另外一个函数了（函数名等函数属性会发生改变）,
+	Python的functools包中提供了一个叫wraps的decorator来消除这样的副作用
+	from functools import wraps
+	def wrapper(func):
+		@wraps(func)  # 装饰器修复函数 保证装饰器不会对被装饰函数造成影响
+		def inner(*args，**kwargs):
+			执行前操作
+			ret=func(*args，**kwargs)
+			执行后操作
+			return ret
+		return inner
+	@wrapper   #func=wrapper(func)
+	def func():
+		pass
+	func()
+	实现一个装饰器,当函数调用时间超过50ms时阻断函数继续执行并抛出异常
+	import time
+	import threading
+	from functools import wraps
+	def func_timeout(func):
+		@wraps(func)
+		def inner(params):
+			start_time=time.time()
+			t=threading.Thread(target=func,args=params)
+			t.setDaemon(True)  #守护线程
+			t.start()
+			time.sleep(0.05)
+			if t.is_alive():
+				raise Exception("Function timeout")
+		return inner
+	@func_timeout
+	def func():pass
+	func()
+
+	应用场景：
+		1.引入日志
+		2.函数执行时间统计
+		3.执行函数前预备处理
+		4.执行函数后的清理功能
+		5.权限校验等场景
+		6.缓存
+		flask中路由设置时用到
+
+68.异常处理写法以及如何主动跑出异常（应用场景）
+		1.为什么要进行异常处理:
+		程序中的异常会导致程序不再继续运行了
+		2.写法：
+			try:执行语句
+			except 异常类型:触发异常后执行的语句
+			else：没有触发异常执行的语句
+			findlly:有没有异常都执行的语句
+		万能异常:Exception,当finally遇到return的时候 finally仍然执行
+		3.主动抛异常(可自定义异常类型)
+			raise 异常类实例   
+
+69.什么是面向对象的mro
+	方法解析顺序
+	对于支持继承的编程语言来说,其方法（属性）可能定义在当前类，也可能来自于基类，
+	当不知道继承顺序的情况下，可以使用这个来查找
+	如果查找一个对象的mro：
+		1先深度优先找到所有父类的继承树,再将其父类作为一个表
+		2取第一个表的头跟其他表的内容对比,如果没有重复的就取出来,并将这个类删除
+		如果有重复的就继续下一个表的表头与其它表的内容对比
+		3.如果不能比较就会报错(循环继承)
+70.isinstance作用以及应用场景？
+	判断一个对象是不是某个类的实例
+	isinstance(obj,cls)判断obj是否是类cls 的对象
+71.json序列化时，可以处理的数据类型有哪些？如何定制支持datetime类型？
+	1.数字
+	2.字符串
+	3.列表
+	4.集合
+	5.布尔值(True-->true False---->false)
+	6.None(None-->null)
+	7.字典
+	import json
+	from json import JSONEncoder
+	from datetime import datetime
+	class ComplexEncoder(JSONEncoder):
+		def default(self, obj):
+			if isinstance(obj, datetime):
+				return obj.strftime(‘%Y-%m-%d %H:%M:%S‘)
+			else:
+				return super(ComplexEncoder,self).default(obj)
+	d = { ‘name‘:‘alex‘,‘data‘:datetime.now()}
+	print(json.dumps(d,cls=ComplexEncoder))
+	# {"name": "alex", "data": "2018-05-18 19:52:05"}
+
+72.json序列化时，默认遇到中文会转换成unicode，如果想要保留中文怎么办？
+	dumps时指定ensure_ascii=False
+	例:
+	dic={"name":"python开发"}
+	print(json.dumps(dic))   {"name": "python\u5f00\u53d1"}
+	print(json.dumps(dic,ensure_ascii=False))  {"name": "python开发"}
+
+73.什么是断言？应用场景？
+	Python的assert是用来检查一个条件，如果它为真，就不做任何事。如果它为假,则会抛出AssertError并且包含错误信息
+    这个异常通常不会去捕获它.我们设置一个断言目的就是要求必须实现某个条件
+	应用场景：
+		1.断言是常用于开发阶段的工具，用来测试代码,是一种很方便的单元测试方法
+		2.使用断言的方式是检查程序的不变量.
+			如果你的函数希望在它开始时有数据库的连接，并且承诺在它返回的时候仍然保持连接，这就是函数的不变量
+		3.按约定进行设计。函数与调用者之间有个约定
+			如果传的非空字符串，保证将字符串的第一个字母大写并返回
+74.有用过with statement吗？它的好处是什么？
+	在文件操作的时候用过,with语句的作用是通过某种方式简化异常处理
+	好处：
+	1.with语句在嵌套的代码执行之后,会自动关闭文件
+	2.无论嵌套的代码以何种方式结束,它都会关闭文件。
+	  如果嵌套的代码发生异常，with会在外部捕获这个异常之前关闭文件
+	3.如果嵌套的代码中有continue/return/break语句,它同样能够关闭文件
+
+	上下文管理器即需要实现两个方法：_enter_()和_exit_(); 
+	_enter_():负责进入代码块的准备工作，进入前被调用； 
+	_exit_()：负责离开代码块的善后工作，离开后被调用；
+	class Context(object):
+			def __enter__(self):
+				print("do something before")
+				return self
+			def __exit__(self,exc_type,exc_val,exc_tb):
+				return print("do something after")
+			def do_something(self):
+				return print("do something")
+		with Context() as ctx:
+			ctx.do_something()
+		python执行with-as 的时候 会调用__enter__方法，然后该函数的返回值传给as后指定的变量，
+		之后会执行with-as 下面的代码块，无论该代码块中出现了什么异常，都会在离开时候执行__exit__
+		__exit__也可以做一些异常的监控和捕获。
+
+75.使用代码实现查看列举目录下的所有文件。
+	import os
+	for base,folder,file_name_list in os.walk("CodeCount"):
+		for item in file_name_list:
+			file_path = os.path.join(base,item)
+			print(file_path)
+	返回的是一个三元组(root,dirs,files)
+	root 所指的是当前正在遍历的这个文件夹的本身的地址
+	dirs 是一个 list,内容是该文件夹中所有的目录的名字(不包括子目录)
+	files 同样是 list ,内容是该文件夹中所有的文件(不包括子目录)
+76.简述 yield和yield from关键字。
+	yield:生成器关键字,返回一个值给调用者,指针停在当前位置
+	yield from:返回另一个生成器
+	yield from obj 相当于 for i in obj:yield i
+	obj可以是 生成器  元组 列表等可迭代对象以及range()函数产生的序列
+77.文件上传和控制文件大小
+	import shutil
+	 1.压缩文件
+	shutil.make_archive(base_name, format, root_dir.....)
+	 2.解压
+	shutil._unpack_zipfile('xxx.zip',path)
+	3.#控制上传文件大小
+	app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024 * 7

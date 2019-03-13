@@ -1,0 +1,214 @@
+1.git常见命令作用：
+	git init 初始化仓库
+	git status 检查当前文件状态
+	git add 放到暂存区
+	git commit 提交到本地仓库
+	git reflog 查询所有的提交历史
+	git reset --soft 版本号  分支---暂存
+	git reset --mix 版本号   分支---修改过的内容
+	git reset --hard 版本号  分支---原内容
+	git checkout 文件        修改过的内容---原内容
+	git branch  xxx          分支创建
+	git checkout test1       分支切换
+	git merge test1			 合并分支
+	git branch -d test1      删除分支
+	git rebase               保持提交记录的整洁
+	git stash                帮助我们暂时存储已经开发一些功能的代码，继续做其他事情，做完之后，再回来继续开发
+	git push [remote-name] [branch-name] 推送到远程仓库
+	git pull origin test1 一步到位   拉取分支
+	git fetch origin test1
+	
+2.简述以下git中stash命令作用以及相关其他命令。
+	帮助我们暂时存储已经开发一些功能的代码，继续做其他事情，做完之后，再回来继续开发
+	git stash list      查看“某个地方”存储的所有记录
+    git stash clear     清空“某个地方”
+    git stash pop       将第一个记录从“某个地方”重新拿到工作区（可能有冲突）
+    git stash apply  编号 将指定编号记录从“某个地方”重新拿到工作区（可能有冲突） 
+    git stash drop   编号  删除指定编号的记录
+3.git 中 merge 和 rebase命令 的区别。
+	git merge合并分支  git rebase 保持提交记录的整洁
+4.公司如何基于git做的协同开发？
+	master线上的分支,dev开发的分支
+	每个人再各自创建自己的分支
+	自己的代码写完合并到dev中时
+    1.需要切换到dev分支
+    2.在dev中合并自己的分支
+    3.再拉取远程库中的dev,会产生冲突
+    4.再提交dev
+5.如何基于git实现代码review？
+	代码review的人：
+		1.组长
+		2.带你的师傅
+
+6.git如何实现v1.0 、v2.0 等版本的管理？
+	git tag -a v1.0 -m '版本介绍'       本地创建Tag
+    git show v1.0                       查看
+    git tags -n                         查看本地Tag
+    git tag -d v1.0                     删除Tag
+    git checkout v.10                   切换tag
+    git push origin  --tags  上传到远程库
+    git pull origin  --tags  
+    git clone -b v0.1 https://github.com/Z-JERD/demo.git 拉取指定的版本
+7.什么是gitlab？
+
+8.github和gitlab的区别？
+	github 是一个基于git实现的在线代码仓库，包含一个网站界面，向互联网开放 
+	gitlab 是一个基于git实现的在线代码仓库软件，可以用gitlab自己搭建一个类似于github一样的系统
+	并且允许免费设置私有仓库,允许用户选择分享一个project的部分代码
+
+9.如何为github上牛逼的开源项目贡献代码？
+	1.先fork将别人的代码放到自己的仓库
+	2.修改测试无误后,pull request 发给对方
+10.git中 .gitignore文件的作用?
+	设置不需要管理的文件
+	写上*.ql *.py 文件 则以sql文件和py文件就不会被管理,会忽略
+11.什么是敏捷开发？
+
+12.简述 jenkins 工具的作用?
+
+13.公司如何实现代码发布？
+
+14.简述 vitualenv 及应用场景?
+	创建虚拟环境,比如我的项目中使用的是django2.0 我下载的是1.11
+	创建虚拟环境来跑程序
+
+15.简述 pipreqs 及应用场景？
+	查看安装包的依赖,生成requirement.txt文件
+	把项目部署到其他机器上时,通过这个文件安装依赖
+
+16.在Python中使用过什么代码检查工具？
+
+17.简述 saltstack、ansible、fabric、puppet工具的作用？
+
+18.B Tree和B+ Tree的区别？
+
+
+
+请列举你熟悉的设计模式？
+    单例模式,工厂模式
+
+
+
+列举熟悉的的Linux命令。
+	pwd:显示当前绝对路径
+	mkdir:创建目录
+	touch:创建文件
+	rmdir:删除空文件
+	echo 向文件结尾追加新内容
+	cp:cp -a 保持属性 cp -a /data/oldboy.txt /tmp 
+		加-r时既能复制目录又能复制文件
+	mv:移动和重命名 
+	cat：显示文件的内容
+	more:分页显示
+	less：分页显示,也可以less /data 查看目录文件
+	head: 默认取出前10行 head -n 取出指定行数
+	tail 读取文件的后 n 行，默认是后 10 行
+	alias：起别名
+	date：查看日期
+	grep，awk，sed
+	grep 最擅长，awk 处理列擅长，sed 擅长删除，修改，替换，添加
+公司线上服务器是什么系统？
+	linux
+解释 PV、UV 的含义？
+
+解释 QPS的含义？
+
+uwsgi和wsgi的区别？
+
+supervisor的作用？
+
+什么是反向代理？
+
+简述SSH的整个过程。
+#############################################补充#####################################3
+1.git pull 和git fetch的区别
+	git pull = git fetch + git merge
+	git fetch：相当于是从远程获取最新版本到本地，不会自动merge
+	git pull相当于是从远程获取最新版本并merge到本地
+	在实际使用中，git fetch更安全一些；
+	因为在merge前，我们可以查看更新情况，然后再决定是否合并
+	
+2.git merge 和 git rebase 的区别
+	git merge 合并分支
+	git rebase 得到一个更加简洁的提交记录
+				所有的修改都是在一根线上先后完成的
+3.如何回滚代码到指定分支
+	1.本地代码库回滚
+		git reset --hard 分支
+	2.远程代码库回滚
+		1、新建backup分支 作为备份，以防万一 git branch backup 
+		2、将本地的backup分支　推送到远程的backup git push origin backup:backup 
+		3.本地仓库彻底回退到指定分支  git reset --hard xxxxx
+		4.删除远程的master分支 git push origin :master
+		5.重新创建远程master分支 git push origin master 
+		方法二：
+			1、本地代码回滚到上一版本 git reset --hard HEAD~
+			2、加入-f参数，强制提交，远程端将强制跟新到reset版本
+				git push -f origin master 
+
+4.Centos7.2中,用一句话将所有的test.py进程全部杀死
+	ps aux | grep test.py | awk '{print $2}' | xargs kill -9
+	分开写：
+	1.找到test.py中所有的进程pid
+		ps -ef | grep test.py
+	2.杀死这些进程：kill -9 pid pid pid
+5.在CentOS7.2中,如何查看程序执行所消耗的CPU,内存等硬件资源
+	top命令
+6.撤销相关
+    1.git reset --soft 版本号
+    2.git reset --mix 版本号
+    3.git reset --hard 版本号
+    4.git reset head 文件
+    5.git checkout 文件
+7.设置版本
+    git tag -a v1.0 -m '版本介绍'        本地创建Tag
+    git show v1.0                       查看
+    git tags -n                         查看本地Tag
+    git tag -d v1.0                     删除Tag
+    git checkout v.10                   切换tag
+    git push origin  --tags  上传到远程库
+    git pull origin  --tags  
+    git clone -b v0.1 https://github.com/Z-JERD/demo.git 拉取指定的版本
+8.设置不需要管理的文件(.idea文件,数据库文件)
+    Git 忽略提交 .gitignore
+    比如日志，临时文件，编译的中间文件vim .gitignore
+    写上*.ql *.py 文件 则以sql文件和py文件就不会被管理,会忽略
+    但是 .gitignore文件需交并上传
+    使用github可自动创建忽略文件
+    .gitignore只能忽略那些原来没有被track的文件,如果某些文件已经被纳入了版本管理中，则修改.gitignore是无效的。
+    解决方法就是先把本地缓存删除（改变成未track状态），然后再提交:
+9.git rebase的详细解释：http://gitbook.liuhui998.com/4_2.html
+	用于修改还没有被提交到远程创库中的提交历史
+	git rebase用于把一个分支的修改合并到当前分支,保持提交记录的整洁性
+	1.假设你现在基于远程分支"origin"，创建一个叫"mywork"的分支
+	  假设远程分支"origin"已经有了2个提交,这两个分支均指向这两个提交
+	2.在mywork"的分支生成两个提交,在"origin"分支上也生成提交,此时这两个分支之间就分叉了
+	3.使用git merge 会分叉
+	4.使用 git rebase 
+	命令会把你的"mywork"分支里的每个提交(commit)取消掉，并且把它们临时 保存为补丁
+	然后把"mywork"分支更新 为最新的"origin"分支，最后把保存的这些补丁应用到"mywork"分支上
+	那些老的提交会被丢弃
+	使用rebase出现的问题：
+	1.在rebase的过程中，也许会出现冲突(conflict)：
+	Git会停止rebase并会让你去解决冲突,在解决完冲突后，用"git-add"命令去更新这些内容的索引(index), 然后,你无需执行 git-commit,只要执行:
+	$ git rebase --continue
+	终止rebase的行动，并且"mywork" 分支会回到rebase开始前的状态
+	$ git rebase --abort
+10.liunx常用命令
+	1.  nc df free -m	
+		nc 监听端口
+		df：查看磁盘
+		free -m 看内存       
+	2.  ifconfig 配置网卡  ip 查看/配置ip信息  ps 查看进程
+	3.  pwd mkdir  touch
+	4.  cp  mv  alias
+	5.  cat more less
+	6.  echo  head tail
+	7.  who w whoami
+	8.  find whereis which
+	9.  useradd userdel passwd 
+	10. chmod chown  chgrp
+	11. grep awk sed
+	12. top 看系统负载，运行时间  mount 挂载  kill
+	13. shutdown clear reboot
+	14. ping curl与网页通信  iptables -F
