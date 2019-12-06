@@ -1,3 +1,5 @@
+Https原理： https://zhuanlan.zhihu.com/p/27395037
+
 **1.简述 OSI 七层协议。
 	TCP/IP               OSI七层模型           每层的物理设备                     每层运行常见的协议
 						   应用层
